@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Report Viewer</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="report-viewer.css">
+</head>
+<body>
+  <div class="main-container" id="rv-root">
+    <div class="container">
+      <div class="section" id="header-section">
+        <div class="header-content">
+          <h1 id="rv-app-title">Report Viewer</h1>
+          <button id="theme-toggle" class="theme-toggle" title="Toggle dark mode">
+            <span class="theme-icon">🌙</span>
+          </button>
+          <button id="rv-new-report" class="btn btn-primary" style="width:auto;margin:0 0 0 8px;">➕ New Report</button>
+        </div>
+        <div class="rv-meta" id="rv-meta" style="margin-top:8px;"></div>
+      </div>
+
+      <div class="section" id="rv-dashboard-section">
+        <div class="rv-layout">
+          <nav class="rv-sidebar">
+            <h3 class="rv-sidebar-title">Reports</h3>
+            <ul id="rv-report-list" class="rv-report-list"></ul>
+          </nav>
+
+          <main class="rv-content" id="rv-content">
+            <div class="rv-report" id="rv-report" style="display:none;"></div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="report-viewer.js"></script>
+  <script src="theme-toggle.js"></script>
+</body>
+</html>
+
+

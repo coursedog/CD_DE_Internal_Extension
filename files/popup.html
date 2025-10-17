@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="main-container">
+    <div class="container">
+      <!-- Header Section -->
+      <div class="section" id="header-section">
+        <div class="header-content">
+          <h1>SIS compare tool + Env capture</h1>
+          <button id="theme-toggle" class="theme-toggle" title="Toggle dark mode">
+            <span class="theme-icon">🌙</span>
+          </button>
+          <button id="load-zip-btn" class="btn btn-primary" style="width:auto;margin-left:8px;">📥 Load Report (ZIP)</button>
+          <input id="load-zip-input" type="file" accept=".zip" style="display:none;" />
+        </div>
+        
+        <div id="notion-upload-banner" style="display:none;margin-top:8px;padding:8px 12px;border:1px solid #f39c12;border-radius:8px;background:#fff8e6;color:#8a6d3b;">
+          ⚠️ A Notion upload is currently in progress. You can close this window; you'll get a system notification when it completes.
+        </div>
+        <style>
+          /* Per-job control button styles */
+          .btn-sm {
+            font-size: 0.8em !important;
+            padding: 4px 8px !important;
+            border-radius: 4px !important;
+            cursor: pointer !important;
+            border: none !important;
+            transition: all 0.2s ease !important;
+          }
+          .btn-sm:hover {
+            opacity: 0.8 !important;
+            transform: translateY(-1px) !important;
+          }
+          .btn-danger {
+            background: #e74c3c !important;
+            color: white !important;
+          }
+          .btn-warning {
+            background: #f39c12 !important;
+            color: white !important;
+          }
+          .btn-secondary {
+            background: #95a5a6 !important;
+            color: white !important;
+          }
+          /* Queue details panel styles */
+          #queue-details-panel {
+            animation: slideDown 0.3s ease-out;
+          }
+          @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          .queue-job-item {
+            transition: all 0.2s ease;
+          }
+          .queue-job-item:hover {
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+          }
+
+          /* Confirmation Modal Styles */
+          .confirmation-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .confirmation-content {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 90%;
+            max-height: 80vh;
+            overflow: hidden;
+          }
+
+          .confirmation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid #eee;
+            background: #f8f9fa;
+          }
+
+          .confirmation-header h3 {
+            margin: 0;
+            font-size: 1.1em;
+            color: #333;
+          }
+
+          .confirmation-close {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #666;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .confirmation-close:hover {
+            color: #333;
+          }
+
+          .confirmation-body {
+            padding: 20px;
+          }
+
+          .confirmation-body p {
+            margin: 0;
+            color: #555;
+            line-height: 1.4;
+          }
+
+          .confirmation-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 16px 20px;
+            border-top: 1px solid #eee;
+            background: #f8f9fa;
+          }
+
+          .confirmation-footer .btn {
+            padding: 8px 16px;
+            font-size: 0.9em;
+          }
+        </style>
+        <div id="notion-queue-status" style="display:none;margin-top:8px;padding:8px 12px;border:1px solid #3498db;border-radius:8px;background:#e8f4fd;color:#2874a6;">
+          <strong>📋 Upload Queue:</strong> <span id="queue-status-text"></span>
+          <div id="queue-progress" style="margin-top:6px;display:none;">
+            <div style="display:flex;justify-content:space-between;font-size:0.85em;margin-bottom:4px;">
+              <span id="queue-progress-text">Processing queue...</span>
+              <span id="queue-progress-percent">0%</span>
+            </div>
+            <div style="width:100%;height:4px;background:#ddd;border-radius:2px;overflow:hidden;">
+              <div id="queue-progress-fill" style="height:100%;background:#3498db;width:0%;transition:width 0.3s ease;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+    <!-- Loading Section -->
+    <div class="section" id="loading-section">
+      <div class="loading-spinner"></div>
+      <h2>Connecting to Coursedog Staging...</h2>
+      <div id="loading-status" class="loading-text">Authenticating...</div>
+    </div>
+
+    <!-- School Selection Section -->
+    <div class="section" id="school-section" style="display: none;">
+      <h2>Select Schools for Comparison</h2>
+      <div class="form-group">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <label for="main-school" style="margin: 0;">Main School:</label>
+          <div class="env-selector-inline">
+            <span class="env-toggle-label-sm" data-env="staging">🧪 Staging</span>
+            <label class="env-toggle-switch-sm">
+              <input type="checkbox" id="main-env-toggle">
+              <span class="env-toggle-slider-sm"></span>
+            </label>
+            <span class="env-toggle-label-sm" data-env="production">🔴 Prod</span>
+          </div>
+        </div>
+        <div class="search-container">
+          <input type="text" id="main-school-search" placeholder="Search for main school..." class="search-input">
+          <select id="main-school" size="6" class="school-dropdown">
+            <option value="">Loading schools...</option>
+          </select>
+          <div id="main-school-selected" class="selected-school" style="display: none;">
+            <span class="selected-text"></span>
+            <button type="button" class="change-btn">Change</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <label for="baseline-school" style="margin: 0;">Baseline School:</label>
+          <div class="env-selector-inline">
+            <span class="env-toggle-label-sm" data-env="staging">🧪 Staging</span>
+            <label class="env-toggle-switch-sm">
+              <input type="checkbox" id="baseline-env-toggle">
+              <span class="env-toggle-slider-sm"></span>
+            </label>
+            <span class="env-toggle-label-sm" data-env="production">🔴 Prod</span>
+          </div>
+        </div>
+        <label class="checkbox-label" style="margin-bottom:8px;">
+          <input type="checkbox" id="baseline-filter-toggle" checked>
+          <span>Show only baseline schools</span>
+        </label>
+        <div class="search-container">
+          <input type="text" id="baseline-school-search" placeholder="Search baseline schools..." class="search-input">
+          <select id="baseline-school" size="6" class="school-dropdown">
+            <option value="">Loading baseline schools...</option>
+          </select>
+          <div id="baseline-school-selected" class="selected-school" style="display: none;">
+            <span class="selected-text"></span>
+            <button type="button" class="change-btn">Change</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Report Type Selection -->
+      <div class="form-group">
+        <h3>Select Report Options</h3>
+        <div class="checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="curriculum-checkbox" checked>
+            <span>Curriculum</span>
+            <small>(Generate Program Template & Course Template reports)</small>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="scheduling-checkbox" checked>
+            <span>Scheduling</span>
+            <small>(Generate Section Template report)</small>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="send-to-notion-checkbox">
+            <span>Send to Notion</span>
+            <small>(Automatically send Pod Lead Review files to Notion page)</small>
+          </label>
+          <div class="form-group" id="notion-url-config" style="margin: 8px 0 0 28px;">
+            <label for="notion-top-level-url" style="display:block;margin-bottom:4px;">Top-level Notion page URL</label>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <input type="text" id="notion-top-level-url" placeholder="https://www.notion.so/..." class="search-input" style="flex:1 1 auto; min-width:0; width:auto;">
+              <!-- Verify button hidden since URL is hardcoded -->
+              <button id="verify-notion-url-btn" class="btn btn-secondary" type="button" style="display:none; flex:0 0 auto; width:auto; white-space:nowrap; padding:6px 10px;">Verify</button>
+              <button id="open-notion-page-btn" class="btn btn-secondary" type="button" style="flex:0 0 auto; width:auto; white-space:nowrap; padding:6px 10px;" title="Open the Notion parent page where reports are uploaded">📖 Open in Notion</button>
+            </div>
+            <small id="notion-top-level-url-help" class="help-text" style="display:block;margin-top:4px;">Subpages will be created under this page.</small>
+            <small id="notion-top-level-url-feedback" class="help-text" style="display:none;margin-top:4px;"></small>
+            <button id="abort-notion-btn" class="retry-btn" type="button" style="margin-top:8px;display:inline-block;" disabled>🛑 Abort Notion Upload</button>
+          </div>
+        </div>
+      </div>
+      
+      <button id="generate-report-btn" class="btn btn-primary" disabled>🔄 Generate New Report</button>
+      
+      <!-- Simple progress for regular users -->
+      <div id="simple-progress" class="simple-progress" style="display: none;">
+        <div class="simple-spinner"></div>
+        <span id="simple-progress-text">Generating report...</span>
+      </div>
+    </div>
+
+
+    <!-- Results Section -->
+    <div class="section" id="results-section" style="display: none;">
+      <h2>Generated Reports</h2>
+      
+      <!-- Loading State for Results -->
+      <div id="results-loading" class="loading-state" style="display: none;">
+        <div class="loading-spinner"></div>
+        <p>Preparing reports and files...</p>
+      </div>
+
+      <!-- Advanced Options Toggle -->
+      <div class="nerd-toggle">
+        <label class="checkbox-label">
+          <input type="checkbox" id="info-for-nerds-checkbox">
+          <span>Info for nerds</span>
+        </label>
+      </div>
+
+      <!-- Experimental Features Toggle -->
+      <div class="experimental-toggle">
+        <label class="checkbox-label">
+          <input type="checkbox" id="experimental-features-checkbox">
+          <span>Experimental Features</span>
+        </label>
+      </div>
+
+      <!-- Progress Section (Hidden behind nerds checkbox) -->
+      <div class="progress-section-container" id="progress-section" style="display: none;">
+        <h3>Report Generation Progress</h3>
+        <div class="progress-bar">
+          <div id="progress-fill" class="progress-fill"></div>
+        </div>
+        <div id="progress-text" class="progress-text">0%</div>
+        
+        <!-- Detailed progress log only for nerds -->
+        <div id="progress-log-container" class="progress-log-container" style="display: none;">
+          <div id="progress-log" class="progress-log"></div>
+        </div>
+      </div>
+
+      <!-- Notion Upload Progress Section (Hidden behind nerds checkbox) -->
+      <div class="progress-section-container" id="notion-progress-section" style="display: none;">
+        <h3>Notion Upload Progress</h3>
+        <div class="progress-bar">
+          <div id="notion-progress-fill" class="progress-fill"></div>
+        </div>
+        <div id="notion-progress-text" class="progress-text">0%</div>
+        
+        <!-- Detailed Notion progress log only for nerds -->
+        <div id="notion-progress-log-container" class="progress-log-container" style="display: none;">
+          <div id="notion-progress-log" class="progress-log"></div>
+        </div>
+      </div>
+
+      <!-- Advanced Download Options (Hidden by default) -->
+      <div id="advanced-options" class="advanced-options" style="display: none;">
+        <div class="download-actions">
+          <button id="download-zip-btn" class="btn btn-primary">📦 Download All Files (ZIP)</button>
+          <div class="individual-downloads">
+            <h3>Individual Files:</h3>
+            <div id="download-links" class="download-links"></div>
+          </div>
+        </div>
+        <div class="debug-section">
+          <button id="debug-data-btn" class="btn btn-secondary">🔍 Debug: Show Raw Data</button>
+          <div id="debug-output" class="debug-output" style="display: none;"></div>
+        </div>
+      </div>
+
+      <!-- Simple Download for Regular Users (moved above reset button) -->
+      <div class="simple-download">
+        <a id="simple-report-download" class="btn btn-success" style="display: none;">📄 Download Configuration Report</a>
+        <button id="view-reports-btn" class="btn btn-primary" style="display: none;">👁️ View Reports</button>
+      </div>
+
+      <button id="reset-btn" class="btn btn-secondary">↻ Start Over (Clear All Data)</button>
+    </div>
+    </div>
+
+    <!-- Notion Integration Section (Hidden behind experimental features checkbox) -->
+    <div class="section" id="notion-section" style="display: none;">
+      <h2>📝 Send to Notion</h2>
+      
+      <!-- Notion Button -->
+      <button id="send-to-notion-btn" class="notion-btn" disabled style="display:none;">
+        <span class="notion-icon">📝</span>
+        Send to Notion
+      </button>
+      
+      
+      <!-- Notion Progress -->
+      <div id="notion-progress" class="notion-progress" style="display: none;">
+        <div class="loading-spinner"></div>
+        <span id="notion-progress-text">Uploading to Notion...</span>
+      </div>
+      
+      <!-- Notion Result -->
+      <div id="notion-result" class="notion-result" style="display: none;">
+        <div class="notion-success">
+          <span class="success-icon">✅</span>
+          <span>Successfully uploaded to Notion!</span>
+        </div>
+        <div class="notion-url-container">
+          <label for="notion-url">Notion Page URL:</label>
+          <div class="url-input-group">
+            <input type="text" id="notion-url" readonly>
+            <button id="copy-notion-url" class="copy-btn">📋 Copy</button>
+            <button id="open-notion-url" class="open-btn">🔗 Open</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Notion Error -->
+      <div id="notion-error" class="notion-error" style="display: none;">
+        <span class="error-icon">❌</span>
+        <span id="notion-error-text">Upload failed</span>
+        <button id="retry-notion-upload" class="retry-btn">🔄 Retry</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="jszip.min.js"></script>
+  <script src="notion-logger.js"></script>
+  <script src="global-field-exceptions.js"></script>
+  <script src="merge-field-options.js"></script>
+  <script src="report-generator.js"></script>
+  <script src="simple-table-builder.js"></script>
+  <script src="json-processor.js"></script>
+  <script src="content-processor.js"></script>
+  <script src="notion-client.js"></script>
+  <script src="notion-uploader.js"></script>
+  <script src="theme-toggle.js"></script>
+  <!-- Load update system -->
+  <script src="update-config.js"></script>
+  <script src="update-manager.js"></script>
+  <script src="update-ui.js"></script>
+  <!-- Load credentials before popup.js -->
+  <script src="credentials.js"></script>
+  <script src="popup.js"></script>
+  <!-- Custom Confirmation Modal -->
+  <div id="confirmation-modal" class="confirmation-modal" style="display: none;">
+    <div class="confirmation-content">
+      <div class="confirmation-header">
+        <h3 id="confirmation-title">Confirm Action</h3>
+        <button id="confirmation-close" class="confirmation-close">&times;</button>
+      </div>
+      <div class="confirmation-body">
+        <p id="confirmation-message">Are you sure?</p>
+      </div>
+      <div class="confirmation-footer">
+        <button id="confirmation-cancel" class="btn btn-secondary">Cancel</button>
+        <button id="confirmation-confirm" class="btn btn-danger">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Production Warning Modal -->
+  <div id="production-warning-modal" class="confirmation-modal" style="display: none;">
+    <div class="confirmation-content">
+      <div class="confirmation-header" style="background: #fff8e6;">
+        <h3 style="color: #856404;">ℹ️ Switch to Production</h3>
+        <button id="production-warning-close" class="confirmation-close">&times;</button>
+      </div>
+      <div class="confirmation-body">
+        <p style="margin-bottom: 12px;">
+          You're about to connect to the <strong>Production</strong> environment.
+        </p>
+        <p style="margin-bottom: 12px;">
+          This will connect to: <code style="background: #f5f5f5; padding: 2px 6px; border-radius: 3px;">app.coursedog.com</code>
+        </p>
+        <p style="margin-bottom: 12px;">
+          📊 This environment contains live customer data.
+        </p>
+        <p style="margin-bottom: 0;">
+          Continue with production?
+        </p>
+      </div>
+      <div class="confirmation-footer">
+        <button id="production-warning-cancel" class="btn btn-secondary">Cancel</button>
+        <button id="production-warning-confirm" class="btn btn-primary">Continue to Production</button>
+      </div>
+    </div>
+  </div>
+
+  </body>
+</html>
