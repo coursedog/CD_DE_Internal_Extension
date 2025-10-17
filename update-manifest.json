@@ -1,0 +1,131 @@
+{
+  "version": "1.1",
+  "releaseDate": "2025-10-17",
+  "changelog": "Update to version 1.1",
+  "files": {
+    "background.js": {
+      "checksum": "2736a3c9d422ea54a62b8e01c3db3c35923f2fab08ee78007ebb1cb13e5d7337",
+      "size": 20281
+    },
+    "content-processor.js": {
+      "checksum": "e815e8239498bb49ceb3e207f8730b932632a030f3c39877f02dc1c4fd448ec0",
+      "size": 18459
+    },
+    "global-field-exceptions.js": {
+      "checksum": "e24686d12a8b36603b8eded8f8fdbf1668c1b168c832ce27c28d5d1224703650",
+      "size": 8012
+    },
+    "jobs-store.js": {
+      "checksum": "84e6e7447f5e99cdaf1c219ad283eb722781162216254ed05a49da1e47a7b7ff",
+      "size": 1484
+    },
+    "jszip.min.js": {
+      "checksum": "acc7e41455a80765b5fd9c7ee1b8078a6d160bbbca455aeae854de65c947d59e",
+      "size": 97630
+    },
+    "manifest.json": {
+      "checksum": "8d38ef23afda97c727c98c8a35ff65403c5ac01e272543c57fba5a3ceb62a774",
+      "size": 927
+    },
+    "merge-field-options.js": {
+      "checksum": "64fad7d6e44e3d8168f8a2f3070b7e81604d62399a288d23d5ddc21d15fbaab3",
+      "size": 22162
+    },
+    "MESSAGE_CONTRACTS.md": {
+      "checksum": "ad5a002ad75e1dc64dc504dda670d87b4fc9c8ae37c4faea25177c71ce00d229",
+      "size": 4033
+    },
+    "notion-client.js": {
+      "checksum": "e6943af21edb229239ff2baa47b98ab6e85f2472be77080d53a49142c2e6228c",
+      "size": 105421
+    },
+    "notion-compiler.js": {
+      "checksum": "a105fa28853e39aa2eee83540b1ad6e6d7aafbdbac01f533e64335e24893dd91",
+      "size": 25075
+    },
+    "notion-logger.js": {
+      "checksum": "1d071c2fc61756e5cb37ad4549b3a1a5256b11a6ead7dd589f7daeb5571ad361",
+      "size": 20536
+    },
+    "notion-uploader.js": {
+      "checksum": "eba1938ca6d8d6ba2200b2332294747547569574bb8d72c696d5d846b7c8971d",
+      "size": 52693
+    },
+    "Notion_Integration_Technical_Documentation.md": {
+      "checksum": "d512e87dbbabdde474a0efbbe3bf84f1188ac2e04fedbc9fd74f8d7607a9dbe6",
+      "size": 28278
+    },
+    "offscreen.html": {
+      "checksum": "4293e64238787a3c0a66c13ea2fe00598658470068ca46446da506c8a81448c1",
+      "size": 568
+    },
+    "offscreen.js": {
+      "checksum": "970097d125083d0329b90f58161190a4526d33447c928894276655206dd5a5f9",
+      "size": 13832
+    },
+    "popup.html": {
+      "checksum": "9485166d47cfc51140152cfe47f094cfa4c8c06e9431dfbdea50db84b9183d32",
+      "size": 18783
+    },
+    "popup.js": {
+      "checksum": "04b53debe4a21008d1e36752837baa645d70e74c5ac6a4ba8941387eb2f27f57",
+      "size": 230063
+    },
+    "README.md": {
+      "checksum": "08ddf3f23e709ea166d756d98ad933616d1cd04cc9785623e7e2ba74f60cdf1d",
+      "size": 21312
+    },
+    "report-generator.js": {
+      "checksum": "7bd8b15d8234274746c237de9692bb299f70db4924012939f9fa12cff3ff6a82",
+      "size": 179167
+    },
+    "report-viewer.css": {
+      "checksum": "393f239877fabec3f35bff01a19384d32299193476a722e52621fc5a67bf9dad",
+      "size": 11289
+    },
+    "report-viewer.html": {
+      "checksum": "73f519f7250fdd5695fcbce4dfebde0c45a97b8f309af6fa97830cc21884a102",
+      "size": 1454
+    },
+    "report-viewer.js": {
+      "checksum": "0d9ccd73d9ef3c0a9801cdfabeae92f325f75c1d3904989193461c998c34d92e",
+      "size": 46368
+    },
+    "scheduler.js": {
+      "checksum": "ae03b83f04deb1ffac67744eda338d5d8dd2ffa98d1602fa2567a609c4ad21b4",
+      "size": 1446
+    },
+    "simple-table-builder.js": {
+      "checksum": "bd6ec6139ab5c0e21e64020fad0621b9bc847f3b354290e3cd7dc667d6d128c5",
+      "size": 41130
+    },
+    "styles.css": {
+      "checksum": "3d32a4013ed4d3293958f6e7b70a640006de30658fe8637fee2707bf6454cc84",
+      "size": 33167
+    },
+    "theme-toggle.js": {
+      "checksum": "d0a2473c9ddc7be674e0e0c753898e330509d1693de725c72c1c61add372084e",
+      "size": 1873
+    },
+    "types.js": {
+      "checksum": "a4eee4b84a748c3f2cccae9c29f29accb40c4b5a93777076337c7c8cdaaca03f",
+      "size": 1550
+    },
+    "update-config.js": {
+      "checksum": "9e136a3acdc61b9c837cf5c2613fb4b7c7691be59678e5ac7aace839615e5024",
+      "size": 2827
+    },
+    "update-manager.js": {
+      "checksum": "1af2706e503ffd74ff25e8322189e9db5877ed13e1c86bc2f6003c9063b03f91",
+      "size": 15242
+    },
+    "update-ui.js": {
+      "checksum": "edc9daa7835117d1a988ed41d9d6270a151b49809db1810018a3fe527dc24498",
+      "size": 11209
+    },
+    "USER_GUIDE.md": {
+      "checksum": "07a48ecb62e00335fc8ab5f7038a8222b0e15c4146f5bcdfaff7e0a6965cf96c",
+      "size": 27415
+    }
+  }
+}

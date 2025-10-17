@@ -1,0 +1,111 @@
+# ================================================================
+# Git Ignore File - Coursedog Extension
+# ================================================================
+# This file specifies which files should NEVER be committed to Git
+# ================================================================
+
+# ================================================================
+# CRITICAL: CREDENTIALS (NEVER COMMIT THESE)
+# ================================================================
+credentials.js
+
+# ================================================================
+# Planning & Development Documentation
+# ================================================================
+# These are temporary docs created during development/planning
+# Not needed for the extension to function
+*_PLAN.md
+*_UPDATE.md
+*_REPORT.md
+*_AUDIT*.md
+*-fix.md
+*-examples.md
+*-reference.md
+*-analysis.md
+*.plan.md
+DOCUMENTATION_AUDIT_REPORT.md
+OFFSCREEN_NOTION_UPLOAD_PLAN.md
+FORMATTER_ENTITY_SELECTION_UPDATE.md
+field_exceptions_complete_analysis.md
+global_field_exceptions_reference.md
+notion-page-markdown.md
+stack-overflow-fixes.md
+table-parsing-fix.md
+table-width-validation-fix.md
+json-line-threshold-update.md
+json-handling-examples.md
+table-usage-examples.md
+
+# ================================================================
+# Temporary & Test Files
+# ================================================================
+temp_*.js
+temp_*.json
+fix_*.js
+test_*.js
+*.tmp
+*.temp
+
+# ================================================================
+# Scripts (dev tools, not part of extension)
+# ================================================================
+*.sh
+*.ps1
+*.bat
+*.cmd
+complete_api_guide.sh
+fix_newlines.ps1
+
+# ================================================================
+# IDE & Editor Files
+# ================================================================
+.history/
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ================================================================
+# Empty/Unused Directories
+# ================================================================
+docs/
+
+# ================================================================
+# Node Modules (if added in future)
+# ================================================================
+node_modules/
+package-lock.json
+yarn.lock
+
+# ================================================================
+# Build/Distribution Files (if added in future)
+# ================================================================
+dist/
+build/
+*.zip
+*.crx
+*.pem
+
+# ================================================================
+# Logs & Debug Files
+# ================================================================
+*.log
+*.log.*
+debug*.json
+error*.txt
+
+# ================================================================
+# OS Generated Files
+# ================================================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
